@@ -6,7 +6,7 @@ spring.jmx.enabled: false
 spring:
      datasource:
          name: test
-         url: jdbc:mysql://118.25.50.160:3306/sharism?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+         url: jdbc:mysql://118.25.50.160:3306/sharism?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false
          username: root
          password: Dys123456.
          # 使用druid数据源
@@ -56,5 +56,10 @@ mybatis:
   mapper-locations: classpath:mapping/*.xml
   type-aliases-package: com.sharism.blog_server.model
 
-
+#pagehelper分页插件
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
 

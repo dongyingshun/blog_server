@@ -6,6 +6,7 @@
     <result column="user_id" jdbcType="CHAR" property="userId" />
     <result column="sort" jdbcType="VARCHAR" property="sort" />
     <result column="blog_title" jdbcType="VARCHAR" property="blogTitle" />
+    <result column="base_blog" jdbcType="VARCHAR" property="baseBlog" />
     <result column="remove" jdbcType="INTEGER" property="remove" />
     <result column="publish_date" jdbcType="VARCHAR" property="publishDate" />
     <result column="draft" jdbcType="INTEGER" property="draft" />
@@ -77,8 +78,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, sort, blog_title, remove, publish_date, draft, transpond_amount, praise_amount, 
-    weight, read_count, privacy_set
+    id, user_id, sort, blog_title, base_blog, remove, publish_date, draft, transpond_amount, 
+    praise_amount, weight, read_count, privacy_set
   </sql>
   <sql id="Blob_Column_List">
     blog
@@ -135,15 +136,15 @@
   </delete>
   <insert id="insert" parameterType="com.sharism.blog_server.model.BlogInfo">
     insert into blog_server_db (id, user_id, sort, blog_title, 
-      remove, publish_date, draft, 
-      transpond_amount, praise_amount, weight, 
-      read_count, privacy_set, blog
-      )
+      base_blog, remove, publish_date, 
+      draft, transpond_amount, praise_amount, 
+      weight, read_count, privacy_set, 
+      blog)
     values (#{id,jdbcType=CHAR}, #{userId,jdbcType=CHAR}, #{sort,jdbcType=VARCHAR}, #{blogTitle,jdbcType=VARCHAR}, 
-      #{remove,jdbcType=INTEGER}, #{publishDate,jdbcType=VARCHAR}, #{draft,jdbcType=INTEGER}, 
-      #{transpondAmount,jdbcType=INTEGER}, #{praiseAmount,jdbcType=INTEGER}, #{weight,jdbcType=INTEGER}, 
-      #{readCount,jdbcType=INTEGER}, #{privacySet,jdbcType=INTEGER}, #{blog,jdbcType=LONGVARCHAR}
-      )
+      #{baseBlog,jdbcType=VARCHAR}, #{remove,jdbcType=INTEGER}, #{publishDate,jdbcType=VARCHAR}, 
+      #{draft,jdbcType=INTEGER}, #{transpondAmount,jdbcType=INTEGER}, #{praiseAmount,jdbcType=INTEGER}, 
+      #{weight,jdbcType=INTEGER}, #{readCount,jdbcType=INTEGER}, #{privacySet,jdbcType=INTEGER}, 
+      #{blog,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.sharism.blog_server.model.BlogInfo">
     insert into blog_server_db
@@ -159,6 +160,9 @@
       </if>
       <if test="blogTitle != null">
         blog_title,
+      </if>
+      <if test="baseBlog != null">
+        base_blog,
       </if>
       <if test="remove != null">
         remove,
@@ -200,6 +204,9 @@
       </if>
       <if test="blogTitle != null">
         #{blogTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="baseBlog != null">
+        #{baseBlog,jdbcType=VARCHAR},
       </if>
       <if test="remove != null">
         #{remove,jdbcType=INTEGER},
@@ -251,6 +258,9 @@
       <if test="record.blogTitle != null">
         blog_title = #{record.blogTitle,jdbcType=VARCHAR},
       </if>
+      <if test="record.baseBlog != null">
+        base_blog = #{record.baseBlog,jdbcType=VARCHAR},
+      </if>
       <if test="record.remove != null">
         remove = #{record.remove,jdbcType=INTEGER},
       </if>
@@ -289,6 +299,7 @@
       user_id = #{record.userId,jdbcType=CHAR},
       sort = #{record.sort,jdbcType=VARCHAR},
       blog_title = #{record.blogTitle,jdbcType=VARCHAR},
+      base_blog = #{record.baseBlog,jdbcType=VARCHAR},
       remove = #{record.remove,jdbcType=INTEGER},
       publish_date = #{record.publishDate,jdbcType=VARCHAR},
       draft = #{record.draft,jdbcType=INTEGER},
@@ -308,6 +319,7 @@
       user_id = #{record.userId,jdbcType=CHAR},
       sort = #{record.sort,jdbcType=VARCHAR},
       blog_title = #{record.blogTitle,jdbcType=VARCHAR},
+      base_blog = #{record.baseBlog,jdbcType=VARCHAR},
       remove = #{record.remove,jdbcType=INTEGER},
       publish_date = #{record.publishDate,jdbcType=VARCHAR},
       draft = #{record.draft,jdbcType=INTEGER},
@@ -331,6 +343,9 @@
       </if>
       <if test="blogTitle != null">
         blog_title = #{blogTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="baseBlog != null">
+        base_blog = #{baseBlog,jdbcType=VARCHAR},
       </if>
       <if test="remove != null">
         remove = #{remove,jdbcType=INTEGER},
@@ -367,6 +382,7 @@
     set user_id = #{userId,jdbcType=CHAR},
       sort = #{sort,jdbcType=VARCHAR},
       blog_title = #{blogTitle,jdbcType=VARCHAR},
+      base_blog = #{baseBlog,jdbcType=VARCHAR},
       remove = #{remove,jdbcType=INTEGER},
       publish_date = #{publishDate,jdbcType=VARCHAR},
       draft = #{draft,jdbcType=INTEGER},
@@ -383,6 +399,7 @@
     set user_id = #{userId,jdbcType=CHAR},
       sort = #{sort,jdbcType=VARCHAR},
       blog_title = #{blogTitle,jdbcType=VARCHAR},
+      base_blog = #{baseBlog,jdbcType=VARCHAR},
       remove = #{remove,jdbcType=INTEGER},
       publish_date = #{publishDate,jdbcType=VARCHAR},
       draft = #{draft,jdbcType=INTEGER},
@@ -393,4 +410,41 @@
       privacy_set = #{privacySet,jdbcType=INTEGER}
     where id = #{id,jdbcType=CHAR}
   </update>
+
+
+
+  <select id="selectBlogPageWithBolg" parameterType="map" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    from blog_server_db
+    where   user_id = #{id}
+
+    <if test="remove != null">
+    AND  remove = #{remove}
+    </if>
+    <if test="privacySet != null">
+    AND privacy_set = #{privacySet}
+    </if>
+    <if test="draft != null">
+    AND draft = #{draft}
+    </if>
+    <if test="arrange == 'ASC'">
+      ORDER BY  publish_date  ASC
+    </if>
+    <if test="arrange == 'DESC'">
+      ORDER BY  publish_date  DESC
+    </if>
+    <if test="arrange == null">
+      ORDER BY  publish_date  DESC
+    </if>
+  </select>
+  <!--批量设置为删除状态-->
+  <update id="batchSetBlogDeleteStatus" parameterType="java.util.List">
+    update blog_server_db set remove = 1 where user_id= #{userId} AND id in
+    <foreach collection="list" item="item" index="index" open="(" close=")"  separator="," >
+      #{item}
+    </foreach>
+
+  </update>
+
 </mapper>

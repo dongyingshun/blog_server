@@ -384,6 +384,76 @@ public class BlogInfoExample {
             return (Criteria) this;
         }
 
+        public Criteria andBaseBlogIsNull() {
+            addCriterion("base_blog is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBaseBlogIsNotNull() {
+            addCriterion("base_blog is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBaseBlogEqualTo(String value) {
+            addCriterion("base_blog =", value, "baseBlog");
+            return (Criteria) this;
+        }
+
+        public Criteria andBaseBlogNotEqualTo(String value) {
+            addCriterion("base_blog <>", value, "baseBlog");
+            return (Criteria) this;
+        }
+
+        public Criteria andBaseBlogGreaterThan(String value) {
+            addCriterion("base_blog >", value, "baseBlog");
+            return (Criteria) this;
+        }
+
+        public Criteria andBaseBlogGreaterThanOrEqualTo(String value) {
+            addCriterion("base_blog >=", value, "baseBlog");
+            return (Criteria) this;
+        }
+
+        public Criteria andBaseBlogLessThan(String value) {
+            addCriterion("base_blog <", value, "baseBlog");
+            return (Criteria) this;
+        }
+
+        public Criteria andBaseBlogLessThanOrEqualTo(String value) {
+            addCriterion("base_blog <=", value, "baseBlog");
+            return (Criteria) this;
+        }
+
+        public Criteria andBaseBlogLike(String value) {
+            addCriterion("base_blog like", value, "baseBlog");
+            return (Criteria) this;
+        }
+
+        public Criteria andBaseBlogNotLike(String value) {
+            addCriterion("base_blog not like", value, "baseBlog");
+            return (Criteria) this;
+        }
+
+        public Criteria andBaseBlogIn(List<String> values) {
+            addCriterion("base_blog in", values, "baseBlog");
+            return (Criteria) this;
+        }
+
+        public Criteria andBaseBlogNotIn(List<String> values) {
+            addCriterion("base_blog not in", values, "baseBlog");
+            return (Criteria) this;
+        }
+
+        public Criteria andBaseBlogBetween(String value1, String value2) {
+            addCriterion("base_blog between", value1, value2, "baseBlog");
+            return (Criteria) this;
+        }
+
+        public Criteria andBaseBlogNotBetween(String value1, String value2) {
+            addCriterion("base_blog not between", value1, value2, "baseBlog");
+            return (Criteria) this;
+        }
+
         public Criteria andRemoveIsNull() {
             addCriterion("remove is null");
             return (Criteria) this;

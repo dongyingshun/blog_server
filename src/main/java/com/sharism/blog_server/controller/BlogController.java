@@ -1,5 +1,6 @@
 package com.sharism.blog_server.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.sharism.blog_server.model.BlogInfo;
 import com.sharism.blog_server.service.BlogService;
 import com.sharism.blog_server.utils.DateTime;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author DYS
@@ -94,9 +95,77 @@ public class BlogController {
         String userId="690770002d9f4b78a10903efc3320391";
 
 
-        return  Result.newInstance().setCode(1).setMessage("成功").setValue(null);
+        String blogPageMap= request.getParameter("blogPageMap");
+        if(blogPageMap==null)
+            return  Result.newInstance().setCode(-1).setMessage("数据为空").setValue(null);
+        JSONObject Page = JSONObject.fromObject(blogPageMap);
+        int pageNum  = Page.getInt("pageNum");
+        int pageSize = Page.getInt("pageSize");
+
+        if(pageSize<0)
+            return  Result.newInstance().setCode(-2).setMessage("数据条数不合法");
+        if(pageNum<0)
+            return  Result.newInstance().setCode(-3).setMessage("页数不合法");
+
+        Map map=(Map)Page;
+        map.put("id",userId);
+        //Page.clear();
+        List<BlogInfo> blogInfos = null;
+        try {
+            blogInfos = blogService.selectBlogPageWithBolg(map, pageNum, pageSize);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  Result.newInstance().setCode(-4).setMessage("服务器错误");
+        }
+
+        PageInfo<BlogInfo> pageInfo = new PageInfo<>(blogInfos);
+
+        return  Result.newInstance().setCode(1).setMessage("成功").setValue(pageInfo);
 
     }
+
+    @RequestMapping(value = "/deleteBlog", produces = {"application/json;charset=UTF-8"})
+    @ResponseBody
+    public Result deleteBlog(HttpServletRequest request, HttpServletResponse response){
+        //TODO 获取session
+        String userId="690770002d9f4b78a10903efc3320391";
+
+
+        String blogArrayList= request.getParameter("blogArrayList");
+        if(blogArrayList==null)
+            return  Result.newInstance().setCode(-1).setMessage("数据为空").setValue(null);
+
+        String[] split = blogArrayList.split(",");
+
+        if(split.length==0)
+            return  Result.newInstance().setCode(-2).setMessage("数据为空");
+
+
+
+        List<String> list =new ArrayList<>();
+        for(String tmp:split) {
+            list.add(tmp);
+        }
+
+        int i = 0;
+        try {
+            i = blogService.batchSetBlogDeleteStatus(userId,list);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  Result.newInstance().setCode(-3).setMessage("删除失败");
+        }
+            return  Result.newInstance().setCode(1).setMessage("成功").setValue(i);
+
+    }
+
+
+
+
+
+
+
+
+
     @RequestMapping(value = "/test",method ={RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
     public Result test(){

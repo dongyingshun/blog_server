@@ -9,6 +9,8 @@ public class BlogInfo {
 
     private String blogTitle;
 
+    private String baseBlog;
+
     private Integer remove;
 
     private String publishDate;
@@ -57,6 +59,14 @@ public class BlogInfo {
 
     public void setBlogTitle(String blogTitle) {
         this.blogTitle = blogTitle == null ? null : blogTitle.trim();
+    }
+
+    public String getBaseBlog() {
+        return baseBlog;
+    }
+
+    public void setBaseBlog(String baseBlog) {
+        this.baseBlog = baseBlog == null ? null : baseBlog.trim();
     }
 
     public Integer getRemove() {

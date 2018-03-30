@@ -2,7 +2,11 @@ package com.sharism.blog_server.mapper;
 
 import com.sharism.blog_server.model.BlogInfo;
 import com.sharism.blog_server.model.BlogInfoExample;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface BlogInfoMapper {
@@ -33,4 +37,13 @@ public interface BlogInfoMapper {
     int updateByPrimaryKeyWithBLOBs(BlogInfo record);
 
     int updateByPrimaryKey(BlogInfo record);
+
+
+    List<BlogInfo> selectBlogPageWithBolg(Map map);
+
+    /**
+     * @param
+     * @return
+     */
+    int batchSetBlogDeleteStatus(@Param(value="userId")String userId,@Param(value="list") List<String>  ids);
 }
