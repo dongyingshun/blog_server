@@ -146,7 +146,6 @@ public class BlogController {
         for(String tmp:split) {
             list.add(tmp);
         }
-
         int i = 0;
         try {
             i = blogService.batchSetBlogDeleteStatus(userId,list);
