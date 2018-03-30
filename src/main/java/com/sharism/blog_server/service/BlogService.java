@@ -36,4 +36,10 @@ public interface BlogService {
      * @return
      */
     int batchSetBlogDeleteStatus(String userId, List<String> ids)throws Exception;
+    /**
+     * 修改博客
+     * @param
+     * @return
+     */
+    int updateByPrimaryKeySelective(BlogInfo blogInfo)throws Exception;
 }

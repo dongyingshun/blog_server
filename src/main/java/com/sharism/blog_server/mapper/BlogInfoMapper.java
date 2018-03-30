@@ -42,6 +42,7 @@ public interface BlogInfoMapper {
     List<BlogInfo> selectBlogPageWithBolg(Map map);
 
     /**
+     * 批量设置为删除状态
      * @param
      * @return
      */

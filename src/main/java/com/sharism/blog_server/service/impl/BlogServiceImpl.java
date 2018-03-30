@@ -52,4 +52,15 @@ public class BlogServiceImpl implements BlogService {
     public int batchSetBlogDeleteStatus(String userId, List<String> ids) throws Exception{
         return blogInfoMapper.batchSetBlogDeleteStatus(userId,ids);
     }
+
+    /**
+     * 修改博客
+     * @param blogInfo
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public int updateByPrimaryKeySelective(BlogInfo blogInfo) throws Exception {
+        return blogInfoMapper.updateByPrimaryKeySelective(blogInfo);
+    }
 }

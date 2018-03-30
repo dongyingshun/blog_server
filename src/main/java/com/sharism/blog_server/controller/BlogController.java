@@ -25,6 +25,7 @@ import java.util.*;
  */
 @CrossOrigin //支持跨域请求
 @Controller
+@RequestMapping(value = "blog")
 public class BlogController {
     @Autowired
     private BlogService blogService;
@@ -63,7 +64,8 @@ public class BlogController {
             return  Result.newInstance().setCode(-2).setMessage("数据转换有误").setValue(null);
         }
         //id
-        blogInfo.setId(Uuid.getUUID());
+        String id=Uuid.getUUID();
+        blogInfo.setId(id);
         //作者id
         blogInfo.setUserId(userId);
         //发表时间
@@ -79,7 +81,7 @@ public class BlogController {
 
         try {
             blogService.insertBlog(blogInfo);
-            return  Result.newInstance().setCode(1).setMessage("博客上传成功").setValue(null);
+            return  Result.newInstance().setCode(1).setMessage("博客上传成功").setValue(id);
         } catch (Exception e) {
             e.printStackTrace();
             return  Result.newInstance().setCode(0).setMessage("博客上传失败").setValue(null);
@@ -157,13 +159,40 @@ public class BlogController {
 
     }
 
+    @RequestMapping(value ="/updateBlogInfo",produces = {"application/json;charset=UTF-8"})
+    @ResponseBody
+    public Result updateBlogInfo(javax.servlet.http.HttpServletRequest request, HttpServletResponse response) {
+        //TODO :获取session值
+        String userId = "690770002d9f4b78a10903efc3320391";
 
+        String blogInfoMap= request.getParameter("updateBlogInfoMap");
+        if(blogInfoMap==null)
+            return  Result.newInstance().setCode(-1).setMessage("数据为空");
+        JSONObject jb = JSONObject.fromObject(blogInfoMap);
+        Map map = (Map)jb;
+        BlogInfo blobgInfo=null;
+        try {
+            blobgInfo =(BlogInfo)mapToBean.mapToBean(map,BlogInfo.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  Result.newInstance().setCode(-2).setMessage("数据转换有误");
+        }
+        if(blobgInfo.getId()==null)
+            return  Result.newInstance().setCode(-3).setMessage("博客id不能为空");
 
+        int i=0;
+        try {
+            i= blogService.updateByPrimaryKeySelective(blobgInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  Result.newInstance().setCode(-4).setMessage("更新失败");
+        }
+        if(i>0)
+            return  Result.newInstance().setCode(1).setMessage("更新成功");
+        else
+            return  Result.newInstance().setCode(0).setMessage("没有要更新的");
 
-
-
-
-
+    }
 
     @RequestMapping(value = "/test",method ={RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
